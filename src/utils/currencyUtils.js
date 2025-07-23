@@ -1,18 +1,8 @@
-const CurrencyConverter = require('currency-converter-lt');
+const { Convert } = require("easy-currencies");
 
 async function convertToUSD(amount, currency) {
-  const currencyConverter = new CurrencyConverter({
-    from: currency,
-    to: 'USD',
-    amount: amount,
-  });
-  let usdAmount;
-  try {
-    usdAmount = await currencyConverter.convert();
-    usdAmount = Math.round(usdAmount * 100) / 100;
-  } catch (error) {
-    usdAmount = null;
-  }
+  let usdAmount = await Convert(amount).from(currency).to("USD");
+  usdAmount = Math.round(usdAmount * 100) / 100;
   return {
     originalAmount: amount,
     originalCurrency: currency,
@@ -20,4 +10,4 @@ async function convertToUSD(amount, currency) {
   };
 }
 
-module.exports = { convertToUSD }; 
+module.exports = { convertToUSD };
