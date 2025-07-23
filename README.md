@@ -57,7 +57,3 @@ Automated tests are provided for all major components using Jest:
 - `tests/storage/subscriptionStorage.test.js` — Tests for in-memory storage
 - `tests/utils/currencyUtils.test.js` — Tests for currency conversion utility
 - `tests/middleware/errorHandler.test.js` — Tests for error handling middleware
-
-## Notes
-- All data is stored in-memory; restarting the server will reset all subscriptions and transactions.
-- LLM functionality is simulated and does not call any external AI services. 
