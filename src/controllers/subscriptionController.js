@@ -1,7 +1,19 @@
 const subscriptionService = require('../services/subscriptionService');
 const billingService = require('../services/billingService');
+const Joi = require('joi');
 
 exports.createSubscription = async (req, res, next) => {
+  const schema = Joi.object({
+    donorId: Joi.string().required(),
+    amount: Joi.number().positive().required(),
+    currency: Joi.string().length(3).required(),
+    interval: Joi.string().valid('monthly', 'yearly', 'weekly').required(),
+    campaignDescription: Joi.string().required(),
+  });
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
   try {
     const { donorId, amount, currency, interval, campaignDescription } = req.body;
     if (!donorId || !amount || !currency || !interval || !campaignDescription) {
@@ -21,6 +33,13 @@ exports.createSubscription = async (req, res, next) => {
 };
 
 exports.cancelSubscription = (req, res, next) => {
+  const schema = Joi.object({
+    donorId: Joi.string().required(),
+  });
+  const { error } = schema.validate(req.params);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
   try {
     const { donorId } = req.params;
     const result = subscriptionService.cancelSubscription(donorId);
@@ -34,6 +53,7 @@ exports.cancelSubscription = (req, res, next) => {
 };
 
 exports.getActiveSubscriptions = (req, res, next) => {
+  // No parameters to validate
   try {
     const subs = subscriptionService.getActiveSubscriptionsDetailed();
     res.json(subs);
@@ -43,6 +63,7 @@ exports.getActiveSubscriptions = (req, res, next) => {
 };
 
 exports.getTransactions = (req, res, next) => {
+  // No parameters to validate
   try {
     const txs = billingService.getTransactions();
     res.json(txs);

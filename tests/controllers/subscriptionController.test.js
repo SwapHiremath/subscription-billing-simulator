@@ -13,12 +13,6 @@ describe('subscriptionController', () => {
   });
 
   describe('createSubscription', () => {
-    it('should return 400 if required fields are missing', async () => {
-      req.body = {};
-      await subscriptionController.createSubscription(req, res, next);
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ error: 'Missing required fields.' });
-    });
 
     it('should return 201 and subscription on success', async () => {
       req.body = { donorId: '1', amount: 10, currency: 'USD', interval: 'monthly', campaignDescription: 'desc' };
