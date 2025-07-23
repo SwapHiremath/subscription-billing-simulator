@@ -1,4 +1,5 @@
 const subscriptionService = require('./subscriptionService');
+const { convertToUSD } = require('../utils/currencyUtils');
 
 const transactions = [];
 
@@ -8,9 +9,11 @@ function processBilling() {
   activeSubs.forEach(sub => {
     // For demo, charge all active subs every interval (e.g., every minute for 'monthly')
     // In real app, check sub.lastCharged and sub.interval
+    const conversion = convertToUSD(sub.amount, sub.currency);
     transactions.push({
       donorId: sub.donorId,
       amount: sub.amount,
+      amountUSD: conversion.usdAmount,
       currency: sub.currency,
       chargedAt: now,
       campaignDescription: sub.campaignDescription,
@@ -28,7 +31,14 @@ function startBillingJob() {
 }
 
 function getTransactions() {
-  return transactions;
+  return transactions.map(tx => ({
+    donorId: tx.donorId,
+    amount: tx.amount,
+    amountUSD: tx.amountUSD,
+    currency: tx.currency,
+    timestamp: tx.chargedAt,
+    campaignSummary: tx.summary,
+  }));
 }
 
 module.exports = { startBillingJob, getTransactions }; 

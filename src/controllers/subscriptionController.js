@@ -1,4 +1,5 @@
 const subscriptionService = require('../services/subscriptionService');
+const billingService = require('../services/billingService');
 
 exports.createSubscription = async (req, res, next) => {
   try {
@@ -27,6 +28,24 @@ exports.cancelSubscription = (req, res, next) => {
       return res.status(404).json({ error: 'Subscription not found.' });
     }
     res.json({ message: 'Subscription cancelled.' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getActiveSubscriptions = (req, res, next) => {
+  try {
+    const subs = subscriptionService.getActiveSubscriptionsDetailed();
+    res.json(subs);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getTransactions = (req, res, next) => {
+  try {
+    const txs = billingService.getTransactions();
+    res.json(txs);
   } catch (err) {
     next(err);
   }

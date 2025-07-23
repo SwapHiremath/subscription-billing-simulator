@@ -12,6 +12,48 @@ A Node.js backend project to simulate recurring nonprofit donations with LLM-pow
 - `POST /subscriptions` — Create a new recurring donation
 - `DELETE /subscriptions/:donorId` — Cancel a subscription
 
+## New Endpoints
+
+### GET /subscriptions
+Returns a list of all active subscriptions.
+
+**Response:**
+```
+[
+  {
+    "donorId": "string",
+    "amount": number,
+    "currency": "USD|EUR|INR|GBP",
+    "interval": "string",
+    "campaignDescription": "string",
+    "tags": ["string"],
+    "summary": "string"
+  },
+  ...
+]
+```
+
+### GET /subscriptions/transactions
+Returns the donation transaction history. Each transaction includes the original and normalized (USD) amount.
+
+**Response:**
+```
+[
+  {
+    "donorId": "string",
+    "amount": number,
+    "amountUSD": number,
+    "currency": "USD|EUR|INR|GBP",
+    "timestamp": "ISO date string",
+    "campaignSummary": "string"
+  },
+  ...
+]
+```
+
+- Currency normalization uses fixed mock rates (see `src/utils/currencyUtils.js`).
+- Only active subscriptions are billed and included in the endpoints above.
+
 ## Setup
 ```bash
 npm install

@@ -28,8 +28,21 @@ function getActiveSubscriptions() {
   return storage.getActiveSubscriptions();
 }
 
+function getActiveSubscriptionsDetailed() {
+  return storage.getActiveSubscriptions().map(sub => ({
+    donorId: sub.donorId,
+    amount: sub.amount,
+    currency: sub.currency,
+    interval: sub.interval,
+    campaignDescription: sub.campaignDescription,
+    tags: sub.tags,
+    summary: sub.summary,
+  }));
+}
+
 module.exports = {
   createSubscription,
   cancelSubscription,
   getActiveSubscriptions,
+  getActiveSubscriptionsDetailed,
 }; 
