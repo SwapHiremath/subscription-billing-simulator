@@ -31,9 +31,33 @@ npm start
 ```
 
 ## Project Structure
-- `src/server.js` — Entry point
-- `src/routes/` — Express route definitions
-- `src/controllers/` — Request handlers
-- `src/services/` — Business logic, LLM simulation, billing
-- `src/storage/` — In-memory data store
-- `src/utils/` — Utility functions 
+- `src/server.js` — Entry point, sets up Express app and background jobs
+- `src/routes/`
+  - `subscriptionRoutes.js` — Defines API endpoints for subscriptions
+- `src/controllers/`
+  - `subscriptionController.js` — Handles incoming requests and responses for subscription APIs
+- `src/services/`
+  - `billingService.js` — Handles recurring billing logic and transaction processing
+  - `subscriptionService.js` — Manages subscription business logic
+  - `llmService.js` — Simulates LLM-powered campaign tagging and summaries
+- `src/storage/`
+  - `subscriptionStorage.js` — In-memory storage and management of subscription data
+- `src/utils/`
+  - `currencyUtils.js` — Utility for currency conversion (using easy-currencies)
+- `src/middleware/`
+  - `errorHandler.js` — Centralized error handling middleware
+
+## Test Coverage
+Automated tests are provided for all major components using Jest:
+- `tests/controllers/subscriptionController.test.js` — Tests for controller logic
+- `tests/routes/subscriptionRoutes.test.js` — Tests for API routes
+- `tests/services/billingService.test.js` — Tests for billing logic
+- `tests/services/subscriptionService.test.js` — Tests for subscription business logic
+- `tests/services/llmService.test.js` — Tests for LLM simulation logic
+- `tests/storage/subscriptionStorage.test.js` — Tests for in-memory storage
+- `tests/utils/currencyUtils.test.js` — Tests for currency conversion utility
+- `tests/middleware/errorHandler.test.js` — Tests for error handling middleware
+
+## Notes
+- All data is stored in-memory; restarting the server will reset all subscriptions and transactions.
+- LLM functionality is simulated and does not call any external AI services. 
