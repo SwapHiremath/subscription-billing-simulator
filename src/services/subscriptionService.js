@@ -2,22 +2,42 @@ const storage = require('../storage/subscriptionStorage');
 const llmService = require('./llmService');
 
 async function createSubscription({ donorId, amount, currency, interval, campaignDescription }) {
-  // Simulate LLM
-  const tagsandsummary = await llmService.generateTagsAndSummary(campaignDescription);
-  const subscription = {
-    donorId,
-    amount,
-    currency,
-    interval,
-    campaignDescription,
-    tags: tagsandsummary?.tags || [],
-    summary: tagsandsummary?.summary || "",
-    active: true,
-    createdAt: new Date(),
-    lastCharged: null,
-  };
-  storage.addSubscription(subscription);
-  return subscription;
+  try {
+    // Simulate LLM
+    const tagsandsummary = await llmService.generateTagsAndSummary(campaignDescription);
+    const subscription = {
+      donorId,
+      amount,
+      currency,
+      interval,
+      campaignDescription,
+      tags: tagsandsummary?.tags || [],
+      summary: tagsandsummary?.summary || "",
+      active: true,
+      createdAt: new Date(),
+      lastCharged: null,
+    };
+    storage.addSubscription(subscription);
+    return subscription;
+  } catch (error) {
+    console.error('Error in createSubscription:', error.message);
+    
+    // Create subscription with fallback values if LLM fails
+    const subscription = {
+      donorId,
+      amount,
+      currency,
+      interval,
+      campaignDescription,
+      tags: ['fallback'],
+      summary: `Subscription for campaign: ${campaignDescription.substring(0, 100)}${campaignDescription.length > 100 ? '...' : ''}`,
+      active: true,
+      createdAt: new Date(),
+      lastCharged: null,
+    };
+    storage.addSubscription(subscription);
+    return subscription;
+  }
 }
 
 function cancelSubscription(donorId) {
